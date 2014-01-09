@@ -11,6 +11,7 @@ import (
 
 var config_location = "/Users/pete/.xrebug.json"
 var config Configuration
+var ini_location string
 
 
 type Configuration struct {
@@ -20,7 +21,14 @@ type Configuration struct {
 
 func main() {
     config := getConfig(config_location)
-    fmt.Println(config.Inifile)
+    ini_location = config.Inifile
+    if isXdebugEnabled(ini_location) {
+        fmt.Println("Disabling xdebug")
+        disableXdebug(ini_location)
+    } else {
+        fmt.Println("Enabling xdebug")
+        enableXdebug(ini_location)
+    }
 }
 
 
@@ -65,19 +73,35 @@ func makeConfigFile(config_location string) []byte {
 
 // }
 
-// func enableXdebug() {
+func enableXdebug(location string) {
+    disabled_location := getDisabledLocation(location)
+    if !isXdebugEnabled(location) {
+        os.Rename(disabled_location, location)
+    }
+}
 
-// }
+func disableXdebug(location string) {
+    disabled_location := getDisabledLocation(location)
+    if isXdebugEnabled(location) {
+        os.Rename(location, disabled_location)
+    }
+}
 
-// func disableXdebug() {
+func getDisabledLocation(location string) string {
+    return location + ".disabled"
+}
 
-// }
+func toggleXdebug(location string) {
+    if !isXdebugEnabled(location) {
+        enableXdebug(location)
+    } else {
+        disableXdebug(location)
+    }
+}
 
-// func toggleXdebug() {
-
-// }
-
-// func isXdebugEnabled() {
-
-// }
+func isXdebugEnabled(location string) (bool) {
+    config, err := os.Open(location)
+    config = config // hmm ... how else do we "not use" config?
+    return !os.IsNotExist(err)
+}
 
