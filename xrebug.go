@@ -70,7 +70,7 @@ func makeConfigFile(config_location string) []byte {
 // }
 
 // func findXdebugIniFile() {
-
+    // needs to warn if xdebug isn't in its own file
 // }
 
 func enableXdebug(location string) {
