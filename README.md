@@ -9,4 +9,4 @@ and sometimes I want to see a code coverage report before I commit to CI.
 License
 -------
 
-This code is in the Public Domain
+This code is in the Public Domain.
